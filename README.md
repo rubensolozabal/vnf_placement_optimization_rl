@@ -2,7 +2,7 @@
 Virtual Network Function placement optimization with Deep Reinforcement Learning
 
 <p align="center">
-  <img  src="images/model.pdf"
+  <img width="460" height="300" src="images/model.PNG"
 </p>
 
 # Paper
@@ -56,11 +56,11 @@ The output from *script_test* are the *test.csv* files, which are available in *
 python graphicate_test.py -f save/model_test.csv
 ```
 
-To learn the models from scratch run the script:
+To learn the models used in the paper from scratch run the script:
 ```
 script_learning
 ```
-The learning process is monitored in *learning_history.csv* file, available in *save/model/*. To visulize the learning provess run:
+The learning process is monitored in a *learning_history.csv* file, available in *save/model/*. To visulize the learning process run:
 ```
 python graphicate_learning.py -f save/model/learning_history.csv
 ```
