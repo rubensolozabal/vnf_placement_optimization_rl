@@ -65,6 +65,13 @@ The learning process is monitored in a *learning_history.csv* file, available in
 python graphicate_learning.py -f save/model/learning_history.csv
 ```
 
+# Miscelanea
+
+Test Minizinc instalation solving the model *placement.mzn* fed with demo input data *placement.dzn*:
+```
+minizinc  placement.mzn placement.dzn  -a
+```
+
 # Author
 
 Ruben Solozabal, PhD student at the University of the Basque Country (UPV/EHU) - Bilbao
