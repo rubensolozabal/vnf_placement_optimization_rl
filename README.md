@@ -51,7 +51,7 @@ The models used in the paper are stored in *save/model/*, to test them agains Ge
 script_test
 ```
 
-The output from *script_test* are the *test.csv* files, which are available in *save/*. To visualize the comparison between Gecode and the neural network model run:
+The output from *script_test* are the *test.csv* files, which are also available in *save/*. To visualize the comparison between Gecode and the neural network model run:
 ```
 python graphicate_test.py -f save/model_test.csv
 ```
