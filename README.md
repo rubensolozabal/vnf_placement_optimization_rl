@@ -2,7 +2,7 @@
 
 Code of the paper: *Virtual Network Function placement optimization with Deep Reinforcement Learning*.
 
-In this project, an attentional sequece-to-sequece model is used to predict real-time solutions on a highly constrained environment. For that purpose, additional reward signals are provided to estimate the parameters of the agent. The reward signal indicating the energy consumption of the infrastructure is complemented with additional feedback signals, indicating the degree of constraint dissatisfaction. These constraints are incorporated into the cost function using the Lagrange relaxation technique.
+In this project, an attentional sequence-to-sequence model is used to predict real-time solutions on a highly constrained environment. For that purpose, additional reward signals are provided to estimate the parameters of the agent. The reward signal indicating the energy consumption of the infrastructure is complemented with additional feedback signals, indicating the degree of constraint dissatisfaction. These constraints are incorporated into the cost function using the Lagrange relaxation technique.
 
 <p align="center">
   <img width="460" height="300" src="images/model.PNG"
