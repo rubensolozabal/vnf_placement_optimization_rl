@@ -21,7 +21,7 @@ In this project, an attentional sequence-to-sequence model is used to predict re
 ````
 # Usage
 
-Learn your own model from scratch (model available in default location *save/model_1*):
+Learn your own model from scratch (model is saved in the default location *save/model*):
 ```
     python main.py --learn_mode=True --save_model=True
 ```
