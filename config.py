@@ -51,8 +51,8 @@ misc_arg.add_argument('--learn_mode', type=str2bool, default=False, help='switch
 misc_arg.add_argument('--save_model', type=str2bool, default=False, help='save model')
 misc_arg.add_argument('--load_model', type=str2bool, default=False, help='load model')
 
-misc_arg.add_argument('--save_to', type=str, default='save/model_1', help='saver sub directory')
-misc_arg.add_argument('--load_from', type=str, default='save/model_1', help='loader sub directory')
+misc_arg.add_argument('--save_to', type=str, default='save/model', help='saver sub directory')
+misc_arg.add_argument('--load_from', type=str, default='save/model', help='loader sub directory')
 misc_arg.add_argument('--log_dir', type=str, default='summary/repo', help='summary writer log directory')
 
 
