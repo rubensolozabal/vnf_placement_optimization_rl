@@ -48,28 +48,28 @@ To activate Tensorflow debugger in Tensorboard, uncomment TensorBoard Debug Wrap
 
 The models used in the paper are stored in *save/model/*, to test them agains Gecode solver run the script:    
 ```
-script_test
+    script_test
 ```
 
 The output from *script_test* are the *test.csv* files, which are also available in *save/*. To visualize the comparison between Gecode and the neural network model run:
 ```
-python graphicate_test.py -f save/model_test.csv
+    python graphicate_test.py -f save/model_test.csv
 ```
 
 To learn the models used in the paper from scratch run the script:
 ```
-script_learning
+    script_learning
 ```
 The learning process is monitored in a *learning_history.csv* file, available in *save/model/*. To visulize the learning process run:
 ```
-python graphicate_learning.py -f save/model/learning_history.csv
+    python graphicate_learning.py -f save/model/learning_history.csv
 ```
 
 # Miscelanea
 
 Test Minizinc instalation solving the model *placement.mzn* fed with demo input data *placement.dzn*:
 ```
-minizinc  placement.mzn placement.dzn  -a
+    minizinc  placement.mzn placement.dzn  -a
 ```
 
 # Author
