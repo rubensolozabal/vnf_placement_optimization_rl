@@ -21,8 +21,10 @@ def main(argv):
             inputfile = arg
 
     reward = []
-    constraints = []
-    optReward = []
+    penalty = []
+    sReward = []
+    hReward = []
+    hPenalty = []
 
     # Retrieve variables from csv
     with open(inputfile) as csv_file:
@@ -31,69 +33,19 @@ def main(argv):
             tmp = row[3].split()
             reward.append(float(tmp[1]))
             tmp = row[4].split()
-            constraints.append(float(tmp[1]))
+            penalty.append(float(tmp[1]))
             tmp = row[6].split()
-            optReward.append(float(tmp[1]))
+            sReward.append(float(tmp[1]))
+            tmp = row[8].split()
+            hReward.append(float(tmp[1]))
+            tmp = row[9].split()
+            hPenalty.append(float(tmp[1]))
 
-    assert len(reward) == len(optReward)
+    assert len(reward) == len(sReward) == len(hReward)
 
-    solution_not_found = 0
-    only_nn_finds_solution = 0
-    only_solver_finds_solution = 0
-
-    nn_better = 0
-    solver_better = 0
-    equal_solution = 0
-
-    cumulative_reward_opt = 0
-    cumulative_reward = 0
-
-    # Classify solution validity
-    for i in range(len(reward)):
-
-        if optReward[i] == 0 and constraints[i] > 0:
-            solution_not_found += 1
-        elif optReward[i] == 0:
-            only_nn_finds_solution += 1
-        elif constraints[i] > 0:
-            only_solver_finds_solution += 1
-        else:
-            if optReward[i] < reward[i]:
-                solver_better += 1
-            elif reward[i] < optReward[i]:
-                nn_better += 1
-            else:
-                equal_solution += 1
-
-            cumulative_reward_opt += optReward[i]
-            cumulative_reward += reward[i]
-
-    # Print results
-    print("No. total: ", len(reward))
-    print("\nNone find a solution: ", solution_not_found)
-    print("Only NN finds solution: ", only_nn_finds_solution)
-    print("Only solver finds solution: ", only_solver_finds_solution)
-    print("\nValid solution found in both cases: ", len(reward)-solution_not_found - only_nn_finds_solution - only_solver_finds_solution)
-    print("     Solver is better: ", solver_better)
-    print("     NN is better: ", nn_better)
-    print("     Equal solution: ", equal_solution)
-    print("     Performance: ", cumulative_reward / cumulative_reward_opt)
-
-    # Plotting...
-    fig, ax = plt.subplots()
-
-    size = 0.3
-    vals = np.array([[solution_not_found, only_nn_finds_solution, only_solver_finds_solution], [solver_better, nn_better, equal_solution]])
-
-    cmap = plt.get_cmap("tab20c")
-    outer_colors = cmap(np.arange(3) * 4)
-    inner_colors = cmap(np.array([1, 2, 3, 5, 6, 7]))
-
-    ax.pie(vals.sum(axis=1), radius=1, colors=outer_colors, wedgeprops=dict(width=size, edgecolor='w'))
-    ax.pie(vals.flatten(), radius=1 - size, colors=inner_colors, wedgeprops=dict(width=size, edgecolor='w'))
-    ax.set(aspect="equal", title='Gecode vs NN')
-
-    plt.show()
+    print("No Error agent: {}".format(np.count_nonzero(penalty)))
+    print("No Error solver: {}".format(len(sReward) - np.count_nonzero(sReward)))
+    print("No Error heuristic: {}".format(np.count_nonzero(hPenalty)))
 
 
 if __name__ == "__main__":

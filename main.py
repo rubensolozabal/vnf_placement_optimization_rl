@@ -16,7 +16,7 @@ from tensorflow.python import debug as tf_debug
 from tqdm import tqdm
 import csv
 import os
-
+from first_fit import *
 
 """ Globals """
 DEBUG = True
@@ -416,7 +416,7 @@ if __name__ == "__main__":
             # Test Gecode solver
             if config.enable_performance:
 
-                optReward = np.zeros(config.batch_size)
+                sReward = np.zeros(config.batch_size)
 
                 filePath = '{}_test.csv'.format(config.load_from)
                 if os.path.exists(filePath):
@@ -424,33 +424,39 @@ if __name__ == "__main__":
 
                 for batch in tqdm(range(config.batch_size)):
 
-                    optPlacement, service_bandwidth, service_net_latency, service_cpu_latency, energy, occupancy, link_used = \
+
+                    hPlacement, hEnergy, hCst_occupancy, hCst_bandwidth, hCcst_latency = first_fit(networkServices.state[batch], networkServices.service_length[batch], env)
+
+
+                    hPenalty = agent.lambda_occupancy * hCst_occupancy + agent.lambda_bandwidth * hCst_bandwidth + agent.lambda_latency * hCcst_latency
+                    hLagrangian = hEnergy + hPenalty
+
+
+                    sPlacement, sSvc_bandwidth, sSvc_net_latency, sSvc_cpu_latency, sEnergy, sOccupancy, sLink_used = \
                         solver(networkServices.state[batch], networkServices.service_length[batch], env)
 
-                    if optPlacement == None:
-                        optReward[batch] = 0
+                    if sPlacement == None:
+                        sReward[batch] = 0
                     else:
                         env.clear()
-                        env.step(networkServices.service_length[batch], networkServices.state[batch], optPlacement)
+                        env.step(networkServices.service_length[batch], networkServices.state[batch], sPlacement)
 
-                        assert service_bandwidth == env.bandwidth
-                        assert service_net_latency == env.link_latency
-                        assert service_cpu_latency == env.cpu_latency
-                        assert energy == env.reward
-                        assert occupancy == list(env.cpu_used)
-                        assert link_used == list(env.link_used)
+                        assert sSvc_bandwidth == env.bandwidth
+                        assert sSvc_net_latency == env.link_latency
+                        assert sSvc_cpu_latency == env.cpu_latency
+                        assert sEnergy == env.reward
+                        assert sOccupancy == list(env.cpu_used)
+                        assert sLink_used == list(env.link_used)
 
-                        optReward[batch] = env.reward
+                        sReward[batch] = env.reward
 
                     # Print testing
-                    print("optReward: ", optReward[batch])
+                    print("solver reward: ", sReward[batch])
                     print("reward: ", best_reward_t[batch])
                     print("cstr_occupancy: ", best_constraint_occupancy_t[batch])
                     print("cstr_bw: ", best_constraint_bandwidth_t[batch])
                     print("cstr_lat: ", best_constraint_latency_t[batch])
 
-                    if best_penalty_t[batch] == 0 and optReward[batch] - 0.1 > best_reward_t[batch]:  # Avoid inequalities due to the last decimal...
-                        print("Solver outperformed: optReward", optReward[batch], "- reward ", best_reward_t[batch])
 
                     # Save in test.csv
                     csvData = [' batch: {}'.format(batch),
@@ -458,8 +464,11 @@ if __name__ == "__main__":
                                ' placement: {}'.format(best_placement_t[batch]),
                                ' reward: {}'.format(best_reward_t[batch]),
                                ' penalty: {}'.format(best_penalty_t[batch]),
-                               ' solver_placement: {}'.format(optPlacement),
-                               ' solver_reward: {}'.format(optReward[batch])]
+                               ' solver_placement: {}'.format(sPlacement),
+                               ' solver_reward: {}'.format(sReward[batch]),
+                               ' heuristic_placement: {}'.format(hPlacement),
+                               ' heuristic_reward: {}'.format(hEnergy),
+                               ' heuristic_penalty: {}'.format(hPenalty)]
 
                     filePath = '{}_test.csv'.format(config.load_from)
                     with open(filePath, 'a') as csvFile:
